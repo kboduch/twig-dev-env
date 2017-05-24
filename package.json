@@ -13,9 +13,11 @@
     "gulp-batch": "^1.0.5",
     "gulp-twig": "^0.7.0",
     "gulp-watch": "^4.3.11",
+    "main-bower-files": "^2.13.1",
     "watch": "^1.0.2"
   },
   "devDependencies": {
+    "gulp-bower": "0.0.13",
     "gulp-clean": "^0.3.2"
   }
 }

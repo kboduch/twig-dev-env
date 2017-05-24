@@ -1,0 +1,44 @@
+{
+  "name": "gulp-twig-dev-env",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "Krzysiek <boduch.krzysztof@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/kboduch/twig-dev-env",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "bootstrap": "^3.3.7"
+  },
+  "overrides": {
+    "jquery": {
+      "main": {
+        "production": "dist/jquery.min.js",
+        "development": "dist/jquery.js"
+      }
+    },
+    "bootstrap": {
+      "main": {
+        "production": [
+          "dist/css/bootstrap.min.css",
+          "dist/js/bootstrap.min.js",
+          "dist/fonts/*"
+        ],
+        "development": [
+          "dist/css/bootstrap.css",
+          "dist/js/bootstrap.js",
+          "dist/fonts/*"
+        ]
+      }
+    }
+  }
+}
