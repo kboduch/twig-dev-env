@@ -36,9 +36,10 @@ gulp.task('watch', function () {
     }));
 
     //css
-    
+
 
     //js
+
 });
 
 gulp.task('default', ['purge-dist', 'compile-twig', 'watch']);
