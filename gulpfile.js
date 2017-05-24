@@ -70,8 +70,11 @@ gulp.task('watch', function () {
 
     //libs
     watch(watchBowerLibSrc, batch(function (events, done) {
-
+        //run bower install
+        //run main-bower-files
     }));
+
+    //src/assets
 });
 
 gulp.task('build', ['compile-twig', 'main-bower-files']);
