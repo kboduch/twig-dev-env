@@ -1,0 +1,16 @@
+{% extends "_layout.twig" %}
+
+{% block page %}
+<header>
+    <h1>{{ 'Blog' | reverse }}</h1>
+</header>
+<p>Hello...</p>
+
+{% for tile in blog.tiles %}
+{{tile.desc}}
+{% endfor %}
+{% for value in index.benefits %}
+<li>{{ value }}</li>
+{% endfor %}
+
+{% endblock %}
