@@ -3,7 +3,7 @@
   "description": "",
   "main": "index.js",
   "authors": [
-    "Krzysiek <boduch.krzysztof@gmail.com>"
+    "Krzysztof Boduch <boduch.krzysztof@gmail.com>"
   ],
   "license": "ISC",
   "homepage": "https://github.com/kboduch/twig-dev-env",

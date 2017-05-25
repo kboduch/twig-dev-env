@@ -8,10 +8,19 @@ var gulp = require('gulp'),
     cssDistAssetPath = distAssetPath + '/css',
     fontsDistAssetPath = distAssetPath + '/fonts',
 
+    srcAssetPath = src + '/assets',
+    jsSrcAssetPath = srcAssetPath + '/js',
+    cssSrcAssetPath = srcAssetPath + '/css',
+    sassSrcAssetPath = srcAssetPath + '/sass',
+
     compileTwigSrc = [src + '/**/*.twig', '!' + src + '/**/_*.twig'],
     watchTwigSrc = [src + '/**/*.twig', rootPath + 'twigConfig.js'],
 
     watchBowerLibSrc = [rootPath + 'bower.json'],
+
+    watchJsSrc = jsSrcAssetPath + '/**/*.js',
+    watchCssSrc = cssSrcAssetPath + '/**/*.css',
+    watchSassSrc = sassSrcAssetPath + '/**/*.sass',
     env = (process.argv.indexOf("--prod") != -1) ? 'production' : 'development'
     ;
 
@@ -37,7 +46,7 @@ gulp.task('purge-dist', function () {
         .pipe(clean());
 });
 
-gulp.task('main-bower-files', function () {
+gulp.task('copy-libs', function () {
     var mainBowerFiles = require('main-bower-files');
 
     gulp.src(mainBowerFiles("**/*.js", {
@@ -59,6 +68,37 @@ gulp.task('main-bower-files', function () {
         .pipe(gulp.dest(fontsDistAssetPath));
 });
 
+gulp.task('bower-install', function () {
+    var bower = require('gulp-bower');
+    return bower();
+});
+
+gulp.task('compile-js', function () {
+    'use strict';
+    var concat = require('gulp-concat');
+
+    return gulp.src(watchJsSrc)
+        .pipe(concat('scripts.js'))
+        .pipe(gulp.dest(jsDistAssetPath));
+});
+
+gulp.task('concat-css', function () {
+    'use strict';
+    var concat = require('gulp-concat-css');
+
+    return gulp.src(watchCssSrc)
+        .pipe(concat('styles.css'))
+        .pipe(gulp.dest(cssDistAssetPath));
+});
+
+gulp.task('compile-sass', function () {
+    var sass = require('gulp-sass');
+
+    return gulp.src(watchSassSrc)
+        .pipe(sass().on('error', sass.logError))
+        .pipe(gulp.dest(cssSrcAssetPath));
+});
+
 gulp.task('watch', function () {
     var watch = require('gulp-watch'),
         batch = require('gulp-batch');
@@ -70,12 +110,34 @@ gulp.task('watch', function () {
 
     //libs
     watch(watchBowerLibSrc, batch(function (events, done) {
-        //run bower install
-        //run main-bower-files
+        gulp.start('bower-install', function () {
+            gulp.start('copy-libs', done);
+        });
     }));
 
-    //src/assets
+    //src assets
+    watch(watchJsSrc, batch(function (events, done) {
+        gulp.start('compile-js', done);
+    }));
+
+    watch(watchCssSrc, batch(function (events, done) {
+        gulp.start('concat-css', done);
+    }));
+
+    watch(watchSassSrc, batch(function (events, done) {
+        gulp.start('compile-sass', done);
+    }));
 });
 
-gulp.task('build', ['compile-twig', 'main-bower-files']);
-gulp.task('default', ['purge-dist', 'build', 'watch']);
+gulp.task('build', function () {
+    var runSequence = require('run-sequence');
+    runSequence(
+        'purge-dist',
+        [ 'bower-install', 'compile-twig', 'compile-js', 'compile-sass' ],
+        [ 'copy-libs', 'concat-css']
+    );
+});
+
+gulp.task('default', ['build', 'watch']);
+
+//todo use gulp.watch, cleanup and stuff
