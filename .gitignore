@@ -3,5 +3,5 @@
 /.idea/
 /dist/*
 /src/assets
-!/src/assets/**/.gitkeep
+!.gitkeep
 .DS_Store
