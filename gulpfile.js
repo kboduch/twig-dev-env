@@ -7,11 +7,13 @@ var gulp = require('gulp'),
     jsDistAssetPath = distAssetPath + '/js',
     cssDistAssetPath = distAssetPath + '/css',
     fontsDistAssetPath = distAssetPath + '/fonts',
+    imagesDistAssetPath = distAssetPath + '/images',
 
     srcAssetPath = src + '/assets',
     jsSrcAssetPath = srcAssetPath + '/js',
     cssSrcAssetPath = srcAssetPath + '/css',
     sassSrcAssetPath = srcAssetPath + '/sass',
+    imagesSrcAssetPath = srcAssetPath + '/images',
 
     compileTwigSrc = [src + '/**/*.twig', '!' + src + '/**/_*.twig'],
     watchTwigSrc = [src + '/**/*.twig', rootPath + 'twigConfig.js'],
@@ -21,6 +23,7 @@ var gulp = require('gulp'),
     watchJsSrc = jsSrcAssetPath + '/**/*.js',
     watchCssSrc = cssSrcAssetPath + '/**/*.css',
     watchSassSrc = sassSrcAssetPath + '/**/*.sass',
+    watchimagesSrc = imagesSrcAssetPath + '/**/*.*',
     env = (process.argv.indexOf("--prod") != -1) ? 'production' : 'development'
     ;
 
@@ -127,13 +130,23 @@ gulp.task('watch', function () {
     watch(watchSassSrc, batch(function (events, done) {
         gulp.start('compile-sass', done);
     }));
+
+    watch(watchimagesSrc, batch(function (events, done) {
+        gulp.start('copy-images', done);
+    }));
+});
+
+gulp.task('copy-images', function () {
+
+    return gulp.src(watchimagesSrc)
+        .pipe(gulp.dest(imagesDistAssetPath));
 });
 
 gulp.task('build', function () {
     var runSequence = require('run-sequence');
     runSequence(
         'purge-dist',
-        [ 'bower-install', 'compile-twig', 'compile-js', 'compile-sass' ],
+        [ 'bower-install', 'compile-twig', 'compile-js', 'compile-sass', 'copy-images'],
         [ 'copy-libs', 'concat-css']
     );
 });

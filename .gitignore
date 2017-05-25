@@ -2,4 +2,6 @@
 /node_modules/
 /.idea/
 /dist/*
+/src/assets
+!/src/assets/**/.gitkeep
 .DS_Store
